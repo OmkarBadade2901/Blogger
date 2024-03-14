@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">  
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blogger</title>
+
+   
+    <link
+      rel="stylesheet"
+      href=""
+      th:href="@{'https://cdn.quilljs.com/1.3.6/quill.snow.css'}"
+    />
+    <link
+      rel="stylesheet"
+      href=""
+    	th:href="@{'https://cdn.quilljs.com/1.3.6/quill.core.css'}"
+    />
+    <script 
+    src=""
+    th:src="@{'https://cdn.quilljs.com/1.3.6/quill.js'}"
+    ></script>
+    
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    
+    <style>
+      .ql-editor img {
+        margin: auto;
+      }
+    </style>
+  </head>
+  <body class="bg-white font-sans">
+    <nav
+      class="bg-indigo-50 h-11 flex w-full px-4 md:px-4 items-center justify-between"
+    >
+      <div class="font-semibold"> <a th:href="@{/index}">Blogger</a>   </div>
+      <div class=" sm:ml-6 sm:block">
+        <div class="flex space-x-4">
+          
+        </div>
+      </div>
+      <div th:if="${session.isEmpty()}" class="bg-indigo-700 text-white rounded-md px-3 py-2 pt-1 text-sm font-medium h-8  hover:">
+            <a href="" th:href="@{/signin}" >Sign in</a>
+        </div>
+        <div th:unless="${session.isEmpty()}" class="bg-indigo-700 text-white rounded-md px-3 py-2 pt-1 text-sm font-medium h-8  hover:">
+            <a href="" th:href="@{/logout}">log out</a>
+        </div>
+    </nav>
+    
+<div id="dynamicContent" th:text="${blog.content}"  hidden></div>
+
+   <main class=" flex items-center justify-center">
+    <div class="border border-gray-500 grid-cols-1 ml-48 mr-48 p-4 gap-4">
+      <div>
+        <div class="">
+          <h1 class="text-3xl font-bold m-auto pt-4 pb-1 text-center" th:text="${blog.title}">Get started with Tailwind CSS</h1>
+        </div>
+        <div class="text-slate-700 ">
+            <p>Posted by <span class="font-bold" th:text="${blog.user.name}"></span> on <span th:text="${blog.dateTime}"></span></p>
+            
+          </div>
+          <hr class=" my-2 border-t-2 border-gray-300">
+      </div>
+      <div class=" w-3/5 h-3/4 mx-auto ">
+        <img 
+        class="border border-x-slate-600 w-3/5 h-3/4 mx-auto " 
+        src=""  
+        th:src="@{'/images/'+${blog.coverImageName}}" >
+      </div>
+      <div id="display-container" class=" mt-4">
+
+      </div>
+    </div>
+   </main>
+
+    <script th:inline="javascript">
+      document.addEventListener("DOMContentLoaded", function () {
+       var dynamicContentElement = document.getElementById("dynamicContent");
+        var savedContent = dynamicContentElement.textContent;
+
+        var displayContainer = document.getElementById("display-container");
+        var displayQuill = new Quill("#display-container", {
+          readOnly: true,
+        });
+        console.log(savedContent);
+        displayQuill.clipboard.dangerouslyPasteHTML(savedContent);
+       // displayContainer.innerHTML =savedContent;
+      });
+    </script>
+  </body>
+</html>

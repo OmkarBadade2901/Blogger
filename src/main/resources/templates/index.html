@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blogger</title>
+       <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body class="bg-white font-sans">
+
+    <nav class="bg-indigo-50 h-11 flex w-full px-4 md:px-4 items-center justify-between">
+        <div class="font-semibold">
+             <a th:href="@{/index}">Blogger</a>
+        </div>
+        <div class="sm:ml-6 sm:block">
+            <div class="flex space-x-4">
+             
+              <a href="" th:href="index" class="  bg-indigo-700 text-white rounded-md px-3 py-2 pt-1 text-sm font-medium h-8 m-auto" aria-current="page" >Home</a>
+              <a href="" th:href="blogs" class=" hover:bg-indigo-700 hover:text-white rounded-md px-3 py-2 pt-1 text-sm font-medium h-8 m-auto">Blogs</a>
+              <a href="connectus.html" class=" hover:bg-indigo-700 hover:text-white rounded-md px-3 py-2 pt-1 text-sm font-medium h-8 m-auto">Connect Us</a>
+
+            </div>
+          </div>
+        
+		<div th:if="${session.isEmpty()}" class="bg-indigo-700 text-white rounded-md px-3 py-2 pt-1 text-sm font-medium h-8  hover:">
+            <a href="" th:href="signin" >Sign in</a>
+        </div>
+        <div th:unless="${session.isEmpty()}" class="bg-indigo-700 text-white rounded-md px-3 py-2 pt-1 text-sm font-medium h-8  hover:">
+            <a href="" th:href="logout">log out</a>
+        </div>
+    </nav>
+
+
+    <div class="bg-cover w-full h-screen flex flex-col justify-center items-center" style="background-image: url('bg.jpg');">
+        <div class="text-center">
+            <a href="" th:href="signin" class="text-white bg-indigo-700 rounded-md px-3 py-2 font-medium">Create new blog</a>
+        </div>
+    </div>   
+
+    </div>
+
+
+
+</body>
+</html>

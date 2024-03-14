@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymleaf.org">
+  <head >
+    <meta charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blogger</title>
+       <link rel="stylesheet" th:href="@{/css/style.css}" />
+  </head>
+  <body class="bg-white font-sans">
+    <nav
+      class="bg-indigo-50 h-11 flex w-full px-4 md:px-4 items-center justify-between"
+    >
+      <div class="font-semibold"> <a th:href="@{/index}">Blogger</a>  </div>
+      <div class="sm:ml-6 sm:block">
+        <div class="flex space-x-4">
+          
+          <a
+            href="myblogs"
+            class="bg-indigo-700 text-white rounded-md px-3 py-2 pt-1 text-sm font-medium h-8 m-auto"
+            aria-current="page"
+            >my blogs</a
+          >
+          <a
+            href="createblog"
+            class="hover:bg-indigo-700 hover:text-white rounded-md px-3 py-2 pt-1 text-sm font-medium h-8 m-auto"
+            >create blog</a
+          >
+        </div>
+      </div>
+      <div
+        class="bg-indigo-700 text-white rounded-md px-3 py-2 pt-1 text-sm font-medium h-8 hover:"
+      >
+        <a href="#" th:href="@{logout}">log out</a>
+      </div>
+    </nav>
+    
+    <main class="m-6 grid grid-cols-2 gap-y-8">
+        <!-- card start -->
+      <div 
+      th:each="item : ${blogs}"
+        class="max-w-lg bg-white border border-gray-200 rounded-lg flex shadow-lg "
+      >
+        <a href="" class="w-3/5">
+          <img
+            name="image"
+            class="min-h-full rounded-l-lg"
+            src=""
+            th:src="'images/'+${item.coverImageName}"
+            alt=""
+          />
+        </a>
+        <div class="p-5 grid grid-cols-1">
+          <div >
+            <h5
+             
+              class="mb-2 text-xl font-bold tracking-tight text-gray-900"
+         	>
+              <span th:text="${item.title}"></span>
+            </h5>
+          </div>
+          <div>
+            <p  class="mb-3 font-normal text-gray-700">
+               <span th:text="${item.subTitle}"></span>
+            </p>
+          </div>
+          <div class="row-end-auto">
+            <a
+              href="#"
+              th:href="@{'modifyPost/'+${item.blogId}}"
+              class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-indigo-700 rounded-lg transition hover:-translate-y-1  duration-200 ease-in-out delay-0 hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300"
+            >
+              Modify
+              
+            </a>
+            <a
+              href="#"
+              th:href="@{'deleteBlog/'+${item.blogId}}"
+              class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-indigo-700 rounded-lg transition hover:-translate-y-1  duration-200 ease-in-out delay-0 hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300"
+            >
+              Delete
+              
+            </a>
+            <a
+              href="#"
+              th:href="@{'viewBlog/'+${item.blogId}}"
+              class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-indigo-700 rounded-lg transition hover:-translate-y-1  duration-200 ease-in-out delay-0 hover:bg-indigo-800 focus:ring-4 focus:outline-none focus:ring-indigo-300"
+            >
+              View
+              
+            </a>
+          </div>
+        </div>
+      </div>
+      <!-- card end -->
+      
+    </main>
+  </body>
+</html>

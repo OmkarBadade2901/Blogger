@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymleaf.org">
+  <head >
+    <meta charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blogger</title>
+ 
+    <link
+      rel="stylesheet"
+      href=""
+      th:href="@{'https://cdn.quilljs.com/1.3.6/quill.snow.css'}"
+    />
+    <link
+      rel="stylesheet"
+      href=""
+    	th:href="@{'https://cdn.quilljs.com/1.3.6/quill.core.css'}"
+    />
+    <script 
+    src=""
+    th:src="@{'https://cdn.quilljs.com/1.3.6/quill.js'}"
+    ></script>
+     <script 
+    src=""
+    th:src="@{'https://cdn.jsdelivr.net/npm/quill-image-resize-module@3.0.0/image-resize.min.js'}"
+    ></script>
+   <link rel="stylesheet" th:href="@{/css/style.css}" />
+  </head>
+  <body class="bg-white font-sans">
+    <nav
+      class="bg-indigo-50 h-11 flex w-full px-4 md:px-4 items-center justify-between"
+    >
+      <div class="font-semibold"> <a th:href="@{/index}">Blogger</a>   </div>
+      <div class="sm:ml-6 sm:block">
+        <div class="flex space-x-4">
+          
+          
+        </div>
+      </div>
+      <div
+        class="bg-indigo-700 text-white rounded-md px-3 py-2 pt-1 text-sm font-medium h-8 hover:"
+      >
+        <a  th:href="@{/logout}">log out</a>
+      </div>
+    </nav>
+    
+    <div id="h-content" th:text="${blog.content}" hidden></div>
+     <div id="blogid" th:text="${blog.blogId}" hidden></div>
+     
+     <main
+      class="ml-auto mr-auto mt-10 p-4 bg-slate-50 flex flex-col gap-y-3 max-w-xl"
+    >
+      <div class="flex align-middle justify-center">
+        <p class="font-bold text-lg">Modify Post</p>
+      </div>
+      <div class="py-2">
+        <p class="">Title</p>
+        <div class="border h-11 p-2" contenteditable="true" id="title"><span th:text="${blog.title}"></span></div>
+      </div>
+      <div class="py-2">
+        <p>Subtitle</p>
+        <div class="border h-11 p-2" contenteditable="true" id="subtitle"><span  th:text="${blog.subTitle}"></span></div>
+      </div>
+      <div class="py-2">
+        <p>Cover Image</p>
+        <div class="flex gap-3">
+          <image
+            id="selected-image"
+            class="mt-2"
+            x="0"
+            y="0"
+            width="24"
+            height="24"
+           
+             th:src="@{'/images/'+${blog.coverImageName}}" 
+            alt="Default Image"
+          />
+          <button
+            type="button"
+            class="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+            onclick="document.getElementById('file-upload').click()"
+          >
+            <span>Change</span>
+            <input
+              id="file-upload"
+              name="file-upload"
+              type="file"
+              class="sr-only"
+              onchange="displayImage(this)"
+            />
+          </button>
+        </div>
+      </div>
+
+      <div class="py-4">
+        <p>Content</p>
+        <div id="editor"></div>
+      </div>
+
+      <button
+        id="saveBtn"
+        class="bg-indigo-700 text-white rounded-md px-3 py-2 pt-1 text-sm font-medium h-8 m-auto"
+        onclick="send()"
+        >
+        Modify
+      </button>
+    </main>
+    <script th:inline="javascript">
+    let quill;
+    var content =document.getElementById("h-content").textContent;
+	var bid =document.getElementById("blogid").textContent;
+	var endpoint=/*[[@{/modifyBlog}]]*/ '';
+document.addEventListener("DOMContentLoaded", function() {
+   
+    quill = new Quill('#editor', {
+        modules: {
+            imageResize: {
+                displaySize: true,
+                handleStyles: {
+                   backgroundColor: 'black',
+                   border: 'none',
+                   color: 'white',
+                },
+                parchment: Quill.import('parchment'),
+             },
+
+            toolbar: [
+                [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                ['bold', 'italic', 'underline'],
+                [{list:'ordered'},{list:'bullet'}],
+                ['image'],
+            ]
+        },
+        placeholder: 'Compose an epic......',
+        theme: 'snow',
+    });
+
+    quill.root.innerHTML =content;
+    
+});
+
+
+
+function displayImage(input) {
+    var selectedImage = document.getElementById('selected-image');
+
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            selectedImage.setAttribute('src', e.target.result);
+        };
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+
+ function send() {
+    var imageData=document.getElementById('file-upload').files[0];
+    var formData = new FormData();
+    formData.append('blogId',bid);
+    formData.append('title', document.getElementById('title').innerText);
+    formData.append('subTitle', document.getElementById('subtitle').innerText);
+    if(imageData!=null){
+    formData.append('coverImage', imageData);
+    endpoint=/*[[@{/modifyBlogI}]]*/ '';
+    }
+    
+    formData.append('content', quill.root.innerHTML); 
+ 
+    
+    fetch(endpoint, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (response.ok) {
+        	window.location.href =/*[[@{/myblogs}]]*/ '';
+            return response.text();
+             
+        } else {
+            throw new Error('Server responded with an error');
+        }
+    })
+    .then(data => {
+        // Handle the success message
+        console.log(data); 
+       
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+   
+    
+};
+    
+    </script>
+  </body>
+</html>
